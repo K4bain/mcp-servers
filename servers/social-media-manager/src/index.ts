@@ -223,7 +223,7 @@ export function startScheduler(): void {
     } catch {
       /* scheduler tick must never crash the process */
     }
-  }, 30_000);
+  }, 30_000).unref();
 }
 
 const platformEnum = z.enum(["twitter", "linkedin", "facebook", "instagram"]);
