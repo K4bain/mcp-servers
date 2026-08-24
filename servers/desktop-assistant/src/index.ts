@@ -67,11 +67,17 @@ interface RunResult {
 export function runShell(command: string, timeoutMs: number): Promise<RunResult> {
   return new Promise((resolve, reject) => {
     const isWin = process.platform === "win32";
-    const child = spawn(isWin ? "cmd" : "sh", [isWin ? "/d /s /c" : "-c", command], {
-      cwd: process.cwd(),
-      windowsHide: true,
-      shell: false,
-    });
+    const child = isWin
+      ? spawn(process.env.ComSpec ?? "cmd.exe", ["/d", "/s", "/c", command], {
+          cwd: process.cwd(),
+          windowsHide: true,
+          windowsVerbatimArguments: true,
+          shell: false,
+        })
+      : spawn("sh", ["-c", command], {
+          cwd: process.cwd(),
+          shell: false,
+        });
     let stdout = "";
     let stderr = "";
     const timer = setTimeout(() => {

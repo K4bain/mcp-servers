@@ -132,30 +132,46 @@ server.registerTool(
   },
   async ({ keywords, max_results, board, remote_only, location_contains }) => {
     try {
-      let jobs: Job[] = [];
+      const allJobs: Job[] = [];
       const errors: string[] = [];
       if (board !== "arbeitnow") {
         try {
-          jobs.push(...(await remotiveSearch(keywords, Math.max(max_results, 10))));
+          allJobs.push(...(await remotiveSearch(keywords, Math.max(max_results, 10))));
         } catch (e) {
           errors.push(`Remotive: ${e instanceof Error ? e.message : e}`);
         }
       }
       if (board !== "remotive") {
         try {
-          jobs.push(...(await arbeitnowSearch(Math.max(max_results, 15))));
+          allJobs.push(...(await arbeitnowSearch(Math.max(max_results, 15))));
         } catch (e) {
           errors.push(`Arbeitnow: ${e instanceof Error ? e.message : e}`);
         }
       }
+      let jobs: Job[] = allJobs;
       const kw = keywords.toLowerCase();
+      const terms = kw.split(/\s+/).filter((k) => k.length > 2);
       jobs = jobs.filter((j) => {
-        const hay = `${j.title} ${j.snippet ?? ""}`.toLowerCase();
-        if (!(hay.includes(kw.split(" ")[0]) || kw.split(" ").some((k) => k.length > 2 && hay.includes(k)))) return false;
+        const hay = `${j.title} ${j.company} ${j.tags ?? ""} ${j.snippet ?? ""}`.toLowerCase();
+        if (terms.length > 0 && !terms.every((k) => hay.includes(k))) return false;
         if (remote_only && !j.remote_ok) return false;
         if (location_contains && !(j.location ?? "").toLowerCase().includes(location_contains.toLowerCase())) return false;
         return true;
       });
+      if (jobs.length === 0 && terms.length > 1) {
+        jobs = allJobs
+          .filter((j) => {
+            const hay = `${j.title} ${j.company} ${j.tags ?? ""} ${j.snippet ?? ""}`.toLowerCase();
+            if (!terms.some((k) => hay.includes(k))) return false;
+            if (remote_only && !j.remote_ok) return false;
+            if (location_contains && !(j.location ?? "").toLowerCase().includes(location_contains.toLowerCase())) return false;
+            return true;
+          })
+          .sort((a, b) => {
+            const score = (x: Job) => terms.filter((t) => x.title.toLowerCase().includes(t)).length;
+            return score(b) - score(a);
+          });
+      }
       jobs = jobs.slice(0, max_results);
       if (jobs.length === 0) {
         const note = errors.length > 0 ? `\nBoard errors: ${errors.join("; ")}` : "";
