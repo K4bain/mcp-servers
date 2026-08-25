@@ -1,4 +1,4 @@
-# WhatsApp Business MCP
+﻿# WhatsApp Business MCP
 
 MCP server that lets AI assistants send and receive **WhatsApp Business Cloud API** messages: free-form text, approved templates, media, read receipts, and inbound message history.
 
@@ -32,7 +32,7 @@ MCP server that lets AI assistants send and receive **WhatsApp Business Cloud AP
 | Tool | Description |
 |------|-------------|
 | `send_message` | Send free-form text (works inside the 24-hour customer service window) |
-| `send_template` | Send an approved template with positional body params — starts new conversations |
+| `send_template` | Send an approved template with positional body params â€” starts new conversations |
 | `send_media` | Send image/video/audio/document by URL, optional caption/filename |
 | `get_messages` | Read recent message history & delivery statuses (optionally filtered) |
 | `mark_as_read` | Blue-tick an inbound message |
@@ -40,8 +40,8 @@ MCP server that lets AI assistants send and receive **WhatsApp Business Cloud AP
 
 ## Example prompts
 
-- "Send 'Your order #1042 has shipped!' to 923001234567"
-- "Send our menu image https://example.com/menu.jpg to 923001234567 with caption 'Today's specials'"
+- "Send 'Your order #1042 has shipped!' to 923XXYYYYYYY"
+- "Send our menu image https://example.com/menu.jpg to 923XXYYYYYYY with caption 'Today's specials'"
 - "Show me the last 10 WhatsApp messages from customers"
 - "What's the quality rating of our business number?"
 
@@ -49,4 +49,4 @@ MCP server that lets AI assistants send and receive **WhatsApp Business Cloud AP
 
 - Free-form messages only work within 24h of the user's last message; use templates otherwise.
 - Template names must be approved in the Meta Business Manager first.
-- Respect user privacy — message people who opted in.
+- Respect user privacy â€” message people who opted in.

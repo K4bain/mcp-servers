@@ -1,4 +1,4 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+﻿import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { createServer, IncomingMessage, ServerResponse } from "node:http";
@@ -182,7 +182,7 @@ server.registerTool(
     description:
       "Send a free-form text message to a WhatsApp number using the WhatsApp Business Cloud API. Requires a 24-hour customer service window unless the number has replied recently; otherwise use send_template.",
     inputSchema: {
-      to: z.string().describe("Recipient phone number with country code, digits only (e.g. 923001234567)"),
+      to: z.string().describe("Recipient phone number with country code, digits only (e.g. 92300123456 (12 digits incl. country code))"),
       message: z.string().max(4096).describe("Text message body"),
       preview_url: z.boolean().optional().describe("Render the first URL in the text as a preview link"),
     },
